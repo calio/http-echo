@@ -1,10 +1,18 @@
 package main
 
 import (
+	"flag"
+	"fmt"
 	"io"
 	"log"
 	"net/http"
 )
+
+var port int
+
+func init() {
+	flag.IntVar(&port, "port", 10101, "Listening port")
+}
 
 func hello(w http.ResponseWriter, r *http.Request) {
 	//w.Header().Add(":method", r.Method)
@@ -23,6 +31,8 @@ func hello(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+	flag.Parse()
+	log.Printf("Listening on :%v", port)
 	http.HandleFunc("/", hello)
-	http.ListenAndServe(":10101", nil)
+	http.ListenAndServe(fmt.Sprintf(":%v", port), nil)
 }
